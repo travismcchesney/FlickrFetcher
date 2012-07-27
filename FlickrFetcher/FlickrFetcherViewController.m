@@ -7,6 +7,8 @@
 //
 
 #import "FlickrFetcherViewController.h"
+#import "FlickrFetcher.h"
+#import "FlickrFetcherPlacesViewController.h"
 
 @interface FlickrFetcherViewController ()
 
@@ -14,16 +16,34 @@
 
 @implementation FlickrFetcherViewController
 
+#define RECENT_KEY @"FlickrFetcherViewController.Recent"
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    NSLog(@"%@", [FlickrFetcher topPlaces]);
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (void)photoViewed:(NSDictionary *)photoData
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *recents = [[defaults objectForKey:RECENT_KEY] mutableCopy];
+    if (!recents) recents = [NSMutableArray array];
+    [recents addObject:photoData];
+    [defaults setObject:recents forKey:RECENT_KEY];
+    [defaults synchronize];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

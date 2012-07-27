@@ -1,5 +1,5 @@
 //
-//  FlickrFetcherViewController.h
+//  FlickrFetcherPlacesViewController.h
 //  FlickrFetcher
 //
 //  Created by Travis McChesney on 7/26/12.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FlickrFetcherViewController : UITabBarController
+@interface FlickrFetcherPlacesViewController : UITableViewController
 
 @end
