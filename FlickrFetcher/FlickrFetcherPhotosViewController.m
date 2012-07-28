@@ -1,22 +1,20 @@
 //
-//  FlickrFetcherPlacesViewController.m
+//  FlickrFetcherPhotosViewController.m
 //  FlickrFetcher
 //
-//  Created by Travis McChesney on 7/26/12.
+//  Created by Travis McChesney on 7/27/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "FlickrFetcherPlacesViewController.h"
-#import "FlickrFetcher.h"
 #import "FlickrFetcherPhotosViewController.h"
 
-@interface FlickrFetcherPlacesViewController ()
-@property (nonatomic, strong) NSArray *places;
+@interface FlickrFetcherPhotosViewController ()
+
 @end
 
-@implementation FlickrFetcherPlacesViewController
+@implementation FlickrFetcherPhotosViewController
 
-@synthesize places = _places;
+@synthesize photos = _photos;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -31,13 +29,12 @@
 {
     [super viewDidLoad];
 
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    self.places = [FlickrFetcher topPlaces];
 }
 
 - (void)viewDidUnload
@@ -45,16 +42,6 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"ShowPlacesPhotos"]){
-        NSDictionary *selectedPlace = [self.places objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-        
-        NSArray *photosForPlace = [FlickrFetcher photosInPlace:selectedPlace maxResults:50];
-        [segue.destinationViewController setPhotos:photosForPlace];
-    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -73,19 +60,21 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.places count];
+    return [self.photos count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Top Places";
+    static NSString *CellIdentifier = @"Photos";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
-    NSString *place = [[self.places objectAtIndex:indexPath.row] objectForKey:@"_content"];
-    NSArray *parts = [place componentsSeparatedByString:@", "];
-    cell.textLabel.text = [parts objectAtIndex:0];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", [parts objectAtIndex:1], [parts objectAtIndex:2], nil];
+    NSString *title = [[self.photos objectAtIndex:indexPath.row] objectForKey:@"title"];
+    NSString *description = [[self.photos objectAtIndex:indexPath.row] valueForKeyPath:@"description._content"];
+    
+    cell.textLabel.text = title ? title : description ? description : @"Unknown";
+    cell.detailTextLabel.text = description ? description : @"";
+    //NSLog(@"%@", [self.photos objectAtIndex:indexPath.row]);
     return cell;
 }
 
@@ -132,7 +121,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    // Navigation logic may go here. Create and push another view controller.
+    /*
+     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+     // ...
+     // Pass the selected object to the new view controller.
+     [self.navigationController pushViewController:detailViewController animated:YES];
+     */
 }
 
 @end
