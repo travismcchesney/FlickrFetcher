@@ -7,6 +7,8 @@
 //
 
 #import "FlickrFetcherPhotosViewController.h"
+#import "FlickrFetcherPhotoViewController.h"
+#import "FlickrFetcher.h"
 
 @interface FlickrFetcherPhotosViewController ()
 
@@ -42,6 +44,26 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"ShowPhoto"]){
+        UIImage *photoImage;
+        NSURL *photoUrl;
+        NSData *urlData;
+        
+        NSDictionary *currentPhoto = [self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        NSString *title = [[self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row] objectForKey:@"title"];
+        NSString *description = [[self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row] valueForKeyPath:@"description._content"];
+        
+        photoUrl = [FlickrFetcher urlForPhoto:currentPhoto format:FlickrPhotoFormatLarge];
+        urlData = [NSData dataWithContentsOfURL:photoUrl];
+        photoImage = [UIImage imageWithData:urlData];
+        
+        [segue.destinationViewController setPhotoImage:photoImage];
+        [segue.destinationViewController setPhotoTitle:title ? title : description ? description : @"Unknown"];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

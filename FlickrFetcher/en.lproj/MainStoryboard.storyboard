@@ -91,7 +91,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
-                                    <segue destination="ch1-nL-zUb" kind="push" id="n5p-Kh-CGF"/>
+                                    <segue destination="ch1-nL-zUb" kind="push" identifier="ShowPhoto" id="n5p-Kh-CGF"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -105,23 +105,33 @@
             </objects>
             <point key="canvasLocation" x="1945" y="46"/>
         </scene>
-        <!--View Controller-->
+        <!--Flickr Fetcher Photo View Controller-->
         <scene sceneID="7c9-e2-UX1">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hbn-6T-Dwi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="ch1-nL-zUb" sceneMemberID="viewController">
+                <viewController id="ch1-nL-zUb" customClass="FlickrFetcherPhotoViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zhK-yg-coW">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="pYs-Tn-BLd">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.20000000000000001" maximumZoomScale="5" id="pYs-Tn-BLd">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="s5m-TW-1S1">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                </subviews>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="UtW-Ze-bLW"/>
+                    <connections>
+                        <outlet property="imageView" destination="s5m-TW-1S1" id="pDO-TK-SsX"/>
+                        <outlet property="scrollView" destination="pYs-Tn-BLd" id="jm2-c4-QN2"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="2356" y="46"/>

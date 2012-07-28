@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A9C1D9C515C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C1D9C415C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m */; };
 		A9FF5E4015C23027006D2FB8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FF5E3F15C23027006D2FB8 /* UIKit.framework */; };
 		A9FF5E4215C23027006D2FB8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FF5E4115C23027006D2FB8 /* Foundation.framework */; };
 		A9FF5E4415C23027006D2FB8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FF5E4315C23027006D2FB8 /* CoreGraphics.framework */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A9C1D9C315C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrFetcherPhotoViewController.h; sourceTree = "<group>"; };
+		A9C1D9C415C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrFetcherPhotoViewController.m; sourceTree = "<group>"; };
 		A9FF5E3B15C23027006D2FB8 /* FlickrFetcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrFetcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9FF5E3F15C23027006D2FB8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A9FF5E4115C23027006D2FB8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +99,8 @@
 				A9FF5E4E15C23027006D2FB8 /* FlickrFetcherAppDelegate.h */,
 				A9FF5E4F15C23027006D2FB8 /* FlickrFetcherAppDelegate.m */,
 				A9FF5E5115C23027006D2FB8 /* MainStoryboard.storyboard */,
+				A9C1D9C315C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.h */,
+				A9C1D9C415C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m */,
 				A9FF5E6915C30E11006D2FB8 /* FlickrFetcherPhotosViewController.h */,
 				A9FF5E6A15C30E11006D2FB8 /* FlickrFetcherPhotosViewController.m */,
 				A9FF5E6315C2353F006D2FB8 /* FlickrFetcherPlacesViewController.h */,
@@ -190,6 +195,7 @@
 				A9FF5E6515C2353F006D2FB8 /* FlickrFetcherPlacesViewController.m in Sources */,
 				A9FF5E6815C23EFF006D2FB8 /* FlickrFetcherRecentsViewController.m in Sources */,
 				A9FF5E6B15C30E11006D2FB8 /* FlickrFetcherPhotosViewController.m in Sources */,
+				A9C1D9C515C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +307,7 @@
 				A9FF5E5B15C23027006D2FB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
