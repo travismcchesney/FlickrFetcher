@@ -84,8 +84,16 @@
     // Configure the cell...
     NSString *place = [[self.places objectAtIndex:indexPath.row] objectForKey:@"_content"];
     NSArray *parts = [place componentsSeparatedByString:@", "];
-    cell.textLabel.text = [parts objectAtIndex:0];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", [parts objectAtIndex:1], [parts objectAtIndex:2], nil];
+    NSString *placePart1;
+    NSString *placePart2;
+    NSString *placePart3;
+    
+    if ([parts count] > 0) placePart1 = [parts objectAtIndex:0];
+    if ([parts count] > 1) placePart2 = [parts objectAtIndex:1];
+    if ([parts count] > 2) placePart3 = [parts objectAtIndex:2];
+    
+    cell.textLabel.text = placePart1;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", placePart2, placePart3, nil];
     return cell;
 }
 

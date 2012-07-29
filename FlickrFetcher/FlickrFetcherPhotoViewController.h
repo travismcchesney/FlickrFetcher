@@ -10,5 +10,5 @@
 
 @interface FlickrFetcherPhotoViewController : UIViewController
 @property (nonatomic, strong) UIImage *photoImage;
-@property (nonatomic, strong) NSString *photoTitle;
+@property (nonatomic, strong) NSDictionary *photo;
 @end

@@ -31,16 +31,6 @@
     // Release any retained subviews of the main view.
 }
 
-- (void)photoViewed:(NSDictionary *)photoData
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *recents = [[defaults objectForKey:RECENT_KEY] mutableCopy];
-    if (!recents) recents = [NSMutableArray array];
-    [recents addObject:photoData];
-    [defaults setObject:recents forKey:RECENT_KEY];
-    [defaults synchronize];
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 

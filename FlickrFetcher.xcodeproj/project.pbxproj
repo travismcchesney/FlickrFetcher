@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A97B9CC915C5CC7800C5D1AD /* RecentPhotos.m in Sources */ = {isa = PBXBuildFile; fileRef = A97B9CC815C5CC7800C5D1AD /* RecentPhotos.m */; };
 		A9C1D9C515C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C1D9C415C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m */; };
 		A9FF5E4015C23027006D2FB8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FF5E3F15C23027006D2FB8 /* UIKit.framework */; };
 		A9FF5E4215C23027006D2FB8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FF5E4115C23027006D2FB8 /* Foundation.framework */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A97B9CC715C5CC7800C5D1AD /* RecentPhotos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentPhotos.h; sourceTree = "<group>"; };
+		A97B9CC815C5CC7800C5D1AD /* RecentPhotos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentPhotos.m; sourceTree = "<group>"; };
 		A9C1D9C315C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrFetcherPhotoViewController.h; sourceTree = "<group>"; };
 		A9C1D9C415C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrFetcherPhotoViewController.m; sourceTree = "<group>"; };
 		A9FF5E3B15C23027006D2FB8 /* FlickrFetcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrFetcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +96,8 @@
 		A9FF5E4515C23027006D2FB8 /* FlickrFetcher */ = {
 			isa = PBXGroup;
 			children = (
+				A97B9CC715C5CC7800C5D1AD /* RecentPhotos.h */,
+				A97B9CC815C5CC7800C5D1AD /* RecentPhotos.m */,
 				A9FF5E5C15C23080006D2FB8 /* FlickrAPIKey.h */,
 				A9FF5E5D15C23080006D2FB8 /* FlickrFetcher.h */,
 				A9FF5E5E15C23080006D2FB8 /* FlickrFetcher.m */,
@@ -196,6 +201,7 @@
 				A9FF5E6815C23EFF006D2FB8 /* FlickrFetcherRecentsViewController.m in Sources */,
 				A9FF5E6B15C30E11006D2FB8 /* FlickrFetcherPhotosViewController.m in Sources */,
 				A9C1D9C515C37A3C00FDA1F2 /* FlickrFetcherPhotoViewController.m in Sources */,
+				A97B9CC915C5CC7800C5D1AD /* RecentPhotos.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

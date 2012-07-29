@@ -9,6 +9,7 @@
 #import "FlickrFetcherPhotosViewController.h"
 #import "FlickrFetcherPhotoViewController.h"
 #import "FlickrFetcher.h"
+#import "RecentPhotos.h"
 
 @interface FlickrFetcherPhotosViewController ()
 
@@ -54,21 +55,22 @@
         NSData *urlData;
         
         NSDictionary *currentPhoto = [self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-        NSString *title = [[self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row] objectForKey:@"title"];
-        NSString *description = [[self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row] valueForKeyPath:@"description._content"];
         
         photoUrl = [FlickrFetcher urlForPhoto:currentPhoto format:FlickrPhotoFormatLarge];
         urlData = [NSData dataWithContentsOfURL:photoUrl];
         photoImage = [UIImage imageWithData:urlData];
         
         [segue.destinationViewController setPhotoImage:photoImage];
-        [segue.destinationViewController setPhotoTitle:title ? title : description ? description : @"Unknown"];
+        [segue.destinationViewController setPhoto:currentPhoto];
+        
+        [RecentPhotos addToRecents:currentPhoto];
     }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait ||
+            UIInterfaceOrientationIsLandscape(interfaceOrientation));
 }
 
 #pragma mark - UITableViewDataSource

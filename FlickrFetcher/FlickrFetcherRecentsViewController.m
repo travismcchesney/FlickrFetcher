@@ -7,12 +7,24 @@
 //
 
 #import "FlickrFetcherRecentsViewController.h"
+#import "FlickrFetcher.h"
+#import "FlickrFetcherPhotoViewController.h"
+#import "RecentPhotos.h"
 
 @interface FlickrFetcherRecentsViewController ()
-
+@property (nonatomic, strong) NSArray *recentPhotos;
 @end
 
 @implementation FlickrFetcherRecentsViewController
+
+@synthesize recentPhotos = _recentPhotos;
+
+- (void)setRecentPhotos:(NSArray *)recentPhotos
+{
+    _recentPhotos = recentPhotos;
+    
+    [[self tableView] reloadData];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -26,11 +38,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
@@ -40,33 +47,59 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"ShowRecentPhoto"]){
+        UIImage *photoImage;
+        NSURL *photoUrl;
+        NSData *urlData;
+        
+        NSDictionary *currentPhoto = [self.recentPhotos objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        
+        photoUrl = [FlickrFetcher urlForPhoto:currentPhoto format:FlickrPhotoFormatLarge];
+        urlData = [NSData dataWithContentsOfURL:photoUrl];
+        photoImage = [UIImage imageWithData:urlData];
+        
+        [segue.destinationViewController setPhotoImage:photoImage];
+        [segue.destinationViewController setPhoto:currentPhoto];
+        
+        [RecentPhotos addToRecents:currentPhoto];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.recentPhotos = [[[RecentPhotos RecentPhotos] reverseObjectEnumerator] allObjects];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait ||
+            UIInterfaceOrientationIsLandscape(interfaceOrientation));
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return [self.recentPhotos count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"Recent Photos";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
+    cell.textLabel.text = [[self.recentPhotos objectAtIndex:indexPath.row] objectForKey:@"title"];
     
     return cell;
 }
