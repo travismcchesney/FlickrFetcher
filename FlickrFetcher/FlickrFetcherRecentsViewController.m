@@ -50,17 +50,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"ShowRecentPhoto"]){
-        UIImage *photoImage;
-        NSURL *photoUrl;
-        NSData *urlData;
         
         NSDictionary *currentPhoto = [self.recentPhotos objectAtIndex:[self.tableView indexPathForSelectedRow].row];
         
-        photoUrl = [FlickrFetcher urlForPhoto:currentPhoto format:FlickrPhotoFormatLarge];
-        urlData = [NSData dataWithContentsOfURL:photoUrl];
-        photoImage = [UIImage imageWithData:urlData];
-        
-        [segue.destinationViewController setPhotoImage:photoImage];
         [segue.destinationViewController setPhoto:currentPhoto];
         
         [RecentPhotos addToRecents:currentPhoto];

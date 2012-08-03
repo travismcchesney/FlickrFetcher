@@ -7,11 +7,13 @@
 //
 
 #import "FlickrFetcherPhotoViewController.h"
+#import "FlickrFetcher.h"
 
 @interface FlickrFetcherPhotoViewController () <UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, strong) UIImage *photoImage;
 
 @end
 
@@ -29,30 +31,70 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)setPhoto:(NSDictionary *)photo
 {
-    [super viewDidLoad];
-	
-    self.scrollView.delegate = self;
-    self.scrollView.contentSize = self.photoImage.size;
-    self.imageView.frame = CGRectMake(0, 0, self.photoImage.size.width, self.photoImage.size.height);
+    if (_photo != photo){
+        _photo = photo;
+
+        NSURL *photoUrl;
+        NSData *urlData;
+        
+        photoUrl = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
+        urlData = [NSData dataWithContentsOfURL:photoUrl];
+        self.photoImage = [UIImage imageWithData:urlData];
+        
+        [self updateView];
+    }
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)updateView
 {
-    [super viewWillAppear:animated];
+    self.scrollView.zoomScale = 1.0;
+    //self.scrollView.contentSize = CGSizeZero;
+    //self.scrollView.contentOffset = CGPointZero;
+    
+    NSLog(@"ScrollView bounds size height: %f, width: %f", self.scrollView.bounds.size.height, self.scrollView.bounds.size.width);
+    
+    NSLog(@"ScrollView bounds origin x: %f, y: %f", self.scrollView.bounds.origin.x, self.scrollView.bounds.origin.y);
+    
+    CGRect bounds = self.scrollView.bounds ;
+    CGPoint scrollLoc = self.scrollView.contentOffset ;
+    
+    NSLog(@"bounds: %@ offset:%@"
+          ,   NSStringFromCGRect(bounds)
+          ,   NSStringFromCGPoint(scrollLoc)) ;
+    
+
+    
+    CGSize size = CGSizeMake(self.photoImage.size.width, self.photoImage.size.height);
+    //CGSize size = CGSizeMake(self.photoImage.size.height, self.photoImage.size.width);
+    self.scrollView.contentSize = size;
+    self.imageView.frame = CGRectMake(0, 0, self.photoImage.size.width, self.photoImage.size.height);
     
     self.imageView.image = self.photoImage;
     self.title = [self titleForPhoto:self.photo];
     CGFloat photoHeight = self.imageView.image.size.height;
     CGFloat photoWidth = self.imageView.image.size.width;
-    if (photoWidth >= photoHeight){
+    
+    if (photoWidth >= photoHeight && !(self.scrollView.frame.size.width > self.scrollView.frame.size.height)){
         [self.scrollView zoomToRect:CGRectMake(0, 0, 1.0, photoHeight) animated:YES];
-        //[self.scrollView zoomToRect:CGRectMake(0, 0, self.photoImage.size.width, self.scrollView.bounds.size.height) animated:YES];
     } else{
-        //[self.scrollView zoomToRect:CGRectMake(0, 0, self.scrollView.bounds.size.width, self.photoImage.size.height) animated:YES];
         [self.scrollView zoomToRect:CGRectMake(0, 0, photoWidth, 1.0) animated:YES];
-    }//[self.scrollView zoomToRect:self.imageView.bounds animated:YES];
+    }
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	
+    self.scrollView.delegate = self;
+    self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateView];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -66,13 +108,6 @@
     [self setScrollView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-
-
-
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

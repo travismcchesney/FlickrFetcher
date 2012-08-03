@@ -50,17 +50,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"ShowPhoto"]){
-        UIImage *photoImage;
-        NSURL *photoUrl;
-        NSData *urlData;
+
         
         NSDictionary *currentPhoto = [self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-        
-        photoUrl = [FlickrFetcher urlForPhoto:currentPhoto format:FlickrPhotoFormatLarge];
-        urlData = [NSData dataWithContentsOfURL:photoUrl];
-        photoImage = [UIImage imageWithData:urlData];
-        
-        [segue.destinationViewController setPhotoImage:photoImage];
+
         [segue.destinationViewController setPhoto:currentPhoto];
         
         [RecentPhotos addToRecents:currentPhoto];
@@ -145,13 +138,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    id detail = [self.splitViewController.viewControllers lastObject];
+    if ([detail isKindOfClass:[FlickrFetcherPhotoViewController class]]) {
+        FlickrFetcherPhotoViewController *photoVC = (FlickrFetcherPhotoViewController *)detail;
+        photoVC.photo = [self.photos objectAtIndex:indexPath.row];
+    }
 }
 
 @end
