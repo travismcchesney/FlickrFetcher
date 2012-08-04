@@ -18,6 +18,14 @@
 
 @synthesize places = _places;
 
+- (void)setPlaces:(NSArray *)places
+{
+    if (_places != places){
+        _places = places;
+        if (self.tableView.window) [self.tableView reloadData];
+    }
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -36,8 +44,17 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self startWait];
     
-    self.places = [FlickrFetcher topPlaces];
+    dispatch_queue_t downloadQueue = dispatch_queue_create("places downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSArray *photos = [FlickrFetcher topPlaces];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.places = photos;
+            [self endWait];
+        });
+    });
+    dispatch_release(downloadQueue);
 }
 
 - (void)viewDidUnload
@@ -52,8 +69,7 @@
     if ([segue.identifier isEqualToString:@"ShowPlacesPhotos"]){
         NSDictionary *selectedPlace = [self.places objectAtIndex:[self.tableView indexPathForSelectedRow].row];
         
-        NSArray *photosForPlace = [FlickrFetcher photosInPlace:selectedPlace maxResults:50];
-        [segue.destinationViewController setPhotos:photosForPlace];
+        [segue.destinationViewController setPlace:selectedPlace];
     }
 }
 
@@ -61,6 +77,18 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait ||
             UIInterfaceOrientationIsLandscape(interfaceOrientation));
+}
+
+- (void)startWait
+{
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+}
+
+- (void)endWait
+{
+    self.navigationItem.rightBarButtonItem = nil;
 }
 
 #pragma mark - UITableViewDataSource

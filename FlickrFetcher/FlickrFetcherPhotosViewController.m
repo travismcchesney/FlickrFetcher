@@ -12,12 +12,21 @@
 #import "RecentPhotos.h"
 
 @interface FlickrFetcherPhotosViewController ()
-
+@property (nonatomic, strong) NSArray *photos;
 @end
 
 @implementation FlickrFetcherPhotosViewController
 
 @synthesize photos = _photos;
+@synthesize place = _place;
+
+-(void)setPhotos:(NSArray *)photos
+{
+    if (_photos != photos){
+        _photos = photos;
+        if (self.tableView.window) [self.tableView reloadData];
+    }
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -32,6 +41,16 @@
 {
     [super viewDidLoad];
 
+    [self startWait];
+    dispatch_queue_t downloadQueue = dispatch_queue_create("place photos downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSArray *photosForPlace = [FlickrFetcher photosInPlace:self.place maxResults:50];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.photos = photosForPlace;
+            [self endWait];
+        });
+    });
+    dispatch_release(downloadQueue);
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -66,6 +85,18 @@
             UIInterfaceOrientationIsLandscape(interfaceOrientation));
 }
 
+- (void)startWait
+{
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+}
+
+- (void)endWait
+{
+    self.navigationItem.rightBarButtonItem = nil;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -86,8 +117,8 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
-    NSString *title = [[self.photos objectAtIndex:indexPath.row] objectForKey:@"title"];
-    NSString *description = [[self.photos objectAtIndex:indexPath.row] valueForKeyPath:@"description._content"];
+    NSString *title = [[self.photos objectAtIndex:indexPath.row] objectForKey:FLICKR_PHOTO_TITLE];
+    NSString *description = [[self.photos objectAtIndex:indexPath.row] valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
     
     cell.textLabel.text = title ? title : description ? description : @"Unknown";
     cell.detailTextLabel.text = description ? description : @"";

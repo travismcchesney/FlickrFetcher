@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, strong) UIImage *photoImage;
+@property (nonatomic, strong) UIActivityIndicatorView *spinner;
 
 @end
 
@@ -21,6 +22,15 @@
 @synthesize imageView = _imageView;
 @synthesize scrollView = _scrollView;
 @synthesize photoImage = _photoImage;
+@synthesize spinner = _spinner;
+
+- (UIActivityIndicatorView *)spinner
+{
+    if (!_spinner){
+        _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    }
+    return _spinner;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,35 +46,46 @@
     if (_photo != photo){
         _photo = photo;
 
-        NSURL *photoUrl;
-        NSData *urlData;
-        
-        photoUrl = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
-        urlData = [NSData dataWithContentsOfURL:photoUrl];
-        self.photoImage = [UIImage imageWithData:urlData];
-        
+        [self updatePhotoImageWithPhoto:photo];
+    }
+}
+
+- (void)setPhotoImage:(UIImage *)photoImage
+{
+    if (_photoImage != photoImage){
+        _photoImage = photoImage;
         [self updateView];
     }
 }
 
-- (void)updateView
+- (void)updatePhotoImageWithPhoto:(NSDictionary *)photo
 {
-    self.scrollView.zoomScale = 1.0;
-    //self.scrollView.contentSize = CGSizeZero;
-    //self.scrollView.contentOffset = CGPointZero;
+    [self startWait];
     
-    NSLog(@"ScrollView bounds size height: %f, width: %f", self.scrollView.bounds.size.height, self.scrollView.bounds.size.width);
-    
-    NSLog(@"ScrollView bounds origin x: %f, y: %f", self.scrollView.bounds.origin.x, self.scrollView.bounds.origin.y);
-    
-    CGRect bounds = self.scrollView.bounds ;
-    CGPoint scrollLoc = self.scrollView.contentOffset ;
-    
-    NSLog(@"bounds: %@ offset:%@"
-          ,   NSStringFromCGRect(bounds)
-          ,   NSStringFromCGPoint(scrollLoc)) ;
-    
+    dispatch_queue_t downloadQueue = dispatch_queue_create("photo downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSURL *photoUrl;
+        NSData *urlData;
+        UIImage *image;
+        
+        photoUrl = [FlickrFetcher urlForPhoto:self.photo format:FlickrPhotoFormatLarge];
+        urlData = [NSData dataWithContentsOfURL:photoUrl];
+        image = [UIImage imageWithData:urlData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.photo == photo && self.imageView.window){
+                self.photoImage = image;
+            } else{
+                NSLog(@"PhotoChanged");
+            }
+            [self endWait];
+        });
+    });
+    dispatch_release(downloadQueue);
+}
 
+- (void)updateView
+{    
+    self.scrollView.zoomScale = 1.0;
     
     CGSize size = CGSizeMake(self.photoImage.size.width, self.photoImage.size.height);
     //CGSize size = CGSizeMake(self.photoImage.size.height, self.photoImage.size.width);
@@ -81,6 +102,8 @@
     } else{
         [self.scrollView zoomToRect:CGRectMake(0, 0, photoWidth, 1.0) animated:YES];
     }
+    
+    [self.scrollView flashScrollIndicators];
 }
 
 - (void)viewDidLoad
@@ -128,6 +151,27 @@
     NSString *description = [photo valueForKeyPath:@"description._content"];
     
     return description ? description : @"Unknown";
+}
+
+- (void)startWait
+{
+    [self.spinner startAnimating];
+    if (self.navigationItem){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.spinner];
+    } else{
+        self.spinner.frame = CGRectMake(0, 0, 100, 100);
+        [self.scrollView addSubview:self.spinner];
+    }
+}
+
+- (void)endWait
+{
+    if (self.navigationItem){
+        self.navigationItem.rightBarButtonItem = nil;
+    } else{
+        [self.spinner removeFromSuperview];
+    }
+
 }
 
 @end
