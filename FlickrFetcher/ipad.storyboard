@@ -98,7 +98,25 @@
                             <outlet property="delegate" destination="mwy-Cj-7OU" id="BLg-Ap-mX2"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Top Places" id="br2-3T-CDY"/>
+                    <navigationItem key="navigationItem" title="Top Places" id="br2-3T-CDY">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="qcJ-Pa-Yd0">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6np-eT-YQ6">
+                                <rect key="frame" x="242" y="4" width="71" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Map">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <connections>
+                                <segue destination="w4V-zk-5hT" kind="push" id="eG4-PX-1ns"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
@@ -146,11 +164,29 @@
                             <outlet property="delegate" destination="U2n-qJ-Gnl" id="OZF-Jr-nbm"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Most Recent" id="k7f-Cw-MIf"/>
+                    <navigationItem key="navigationItem" title="Most Recent" id="k7f-Cw-MIf">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="rJX-zh-LXL">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zev-hj-TeL">
+                                <rect key="frame" x="242" y="4" width="71" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Map">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="w4V-zk-5hT" kind="push" id="hwH-ma-bax"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="870" y="-1272"/>
+            <point key="canvasLocation" x="1116" y="-1272"/>
         </scene>
         <!--Flickr Fetcher Photo View Controller-->
         <scene sceneID="f1K-Jl-IeI">
@@ -225,11 +261,50 @@
                             <outlet property="delegate" destination="tHF-3B-WwN" id="UB9-hF-bkd"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Title" id="Y73-aG-Iwr"/>
+                    <navigationItem key="navigationItem" title="Title" id="Y73-aG-Iwr">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="Qw2-t4-50Q">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="OTW-5h-U4z">
+                                <rect key="frame" x="242" y="4" width="71" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Map">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <connections>
+                                <segue destination="w4V-zk-5hT" kind="push" id="y6w-36-5ba"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="530" y="-277"/>
+        </scene>
+        <!--Map View Controller - Title-->
+        <scene sceneID="bMj-jq-zEv">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qNK-Lz-LcE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="w4V-zk-5hT" customClass="MapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bq2-8v-ABv">
+                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="a6C-IZ-ACp">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="739"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="BTr-Jj-nxD"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1654" y="-277"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eCh-TC-HtN">
@@ -251,9 +326,39 @@
             <point key="canvasLocation" x="-73" y="-277"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="FlickrFetcherPhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPhotoViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="FlickrFetcherPhotosViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPhotosViewController.h"/>
+        </class>
+        <class className="FlickrFetcherPlacesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPlacesViewController.h"/>
+        </class>
+        <class className="FlickrFetcherRecentsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherRecentsViewController.h"/>
+        </class>
+        <class className="FlickrFetcherViewController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherViewController.h"/>
+        </class>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="eG4-PX-1ns"/>
+    </inferredMetricsTieBreakers>
 </document>

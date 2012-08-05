@@ -8,6 +8,7 @@
 
 #import "FlickrFetcherPhotoViewController.h"
 #import "FlickrFetcher.h"
+#import "FlickrFetcherCache.h"
 
 @interface FlickrFetcherPhotoViewController () <UIScrollViewDelegate>
 
@@ -64,13 +65,9 @@
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("photo downloader", NULL);
     dispatch_async(downloadQueue, ^{
-        NSURL *photoUrl;
-        NSData *urlData;
         UIImage *image;
         
-        photoUrl = [FlickrFetcher urlForPhoto:self.photo format:FlickrPhotoFormatLarge];
-        urlData = [NSData dataWithContentsOfURL:photoUrl];
-        image = [UIImage imageWithData:urlData];
+        image = [FlickrFetcherCache imageForPhoto:photo];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.photo == photo && self.imageView.window){
                 self.photoImage = image;
@@ -141,14 +138,14 @@
 
 - (NSString *)titleForPhoto:(id)photo
 {
-    NSString *title = [photo objectForKey:@"title"];
+    NSString *title = [photo objectForKey:FLICKR_PHOTO_TITLE];
     
     return title ? title : [self descriptionForPhoto:photo];
 }
 
 - (NSString *)descriptionForPhoto:(id)photo
 {
-    NSString *description = [photo valueForKeyPath:@"description._content"];
+    NSString *description = [photo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
     
     return description ? description : @"Unknown";
 }
@@ -156,20 +153,22 @@
 - (void)startWait
 {
     [self.spinner startAnimating];
-    if (self.navigationItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.spinner];
-    } else{
+    if (self.splitViewController != nil){
         self.spinner.frame = CGRectMake(0, 0, 100, 100);
         [self.scrollView addSubview:self.spinner];
+
+    } else{
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.spinner];
     }
 }
 
 - (void)endWait
 {
-    if (self.navigationItem){
-        self.navigationItem.rightBarButtonItem = nil;
-    } else{
+    if (self.splitViewController != nil){
         [self.spinner removeFromSuperview];
+
+    } else{
+        self.navigationItem.rightBarButtonItem = nil;
     }
 
 }
