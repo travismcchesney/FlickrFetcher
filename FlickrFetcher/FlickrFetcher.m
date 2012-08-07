@@ -8,8 +8,6 @@
 #import "FlickrFetcher.h"
 #import "FlickrAPIKey.h"
 
-#define FLICKR_PLACE_ID @"place_id"
-
 @implementation FlickrFetcher
 
 + (NSDictionary *)executeFlickrFetch:(NSString *)query

@@ -8,6 +8,7 @@
 
 #import "FlickrFetcherCache.h"
 #import "FlickrFetcher.h"
+#import "RecentPhotos.h"
 
 #define FILENAME_PREFIX @"FlickrFetcher.Cache."
 #define CACHE_DIR @"FlickrFetcher"
@@ -122,6 +123,8 @@
         
         [self saveImageToCache:image forKey:key];
     }
+    
+    [RecentPhotos addToRecents:photo];
     
     return image;
 }

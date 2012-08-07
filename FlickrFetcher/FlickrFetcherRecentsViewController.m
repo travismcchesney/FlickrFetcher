@@ -9,9 +9,11 @@
 #import "FlickrFetcherRecentsViewController.h"
 #import "FlickrFetcher.h"
 #import "FlickrFetcherPhotoViewController.h"
+#import "MapViewController.h"
 #import "RecentPhotos.h"
+#import "FlickrPhotoAnnotation.h"
 
-@interface FlickrFetcherRecentsViewController ()
+@interface FlickrFetcherRecentsViewController () <MapViewControllerDelegate>
 @property (nonatomic, strong) NSArray *recentPhotos;
 @end
 
@@ -56,6 +58,9 @@
         [segue.destinationViewController setPhoto:currentPhoto];
         
         [RecentPhotos addToRecents:currentPhoto];
+    } else if ([segue.identifier isEqualToString:@"ShowMap"]) {
+        [segue.destinationViewController setDelegate:self];
+        [segue.destinationViewController setAnnotations:[self mapAnnotations]];
     }
 }
 
@@ -70,6 +75,22 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait ||
             UIInterfaceOrientationIsLandscape(interfaceOrientation));
+}
+
+#pragma mark - MapViewControllerDelegate
+
+- (NSArray *)mapAnnotations
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.recentPhotos count]];
+    for (NSDictionary *photo in self.recentPhotos) {
+        [annotations addObject:[FlickrPhotoAnnotation annotationForPhoto:photo]];
+    }
+    return annotations;
+}
+
+- (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
+{
+    return nil;
 }
 
 #pragma mark - Table view data source

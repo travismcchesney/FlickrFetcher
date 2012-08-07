@@ -18,4 +18,7 @@
 @interface MapViewController : UIViewController
 @property (nonatomic, strong) NSArray *annotations; // of id <MKAnnotation>
 @property (nonatomic, weak) id <MapViewControllerDelegate> delegate;
+
++ (MKCoordinateRegion)regionForAnnotations:(NSArray *)annotations;
+
 @end

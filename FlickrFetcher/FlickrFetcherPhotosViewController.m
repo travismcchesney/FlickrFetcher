@@ -10,9 +10,12 @@
 #import "FlickrFetcherPhotoViewController.h"
 #import "FlickrFetcher.h"
 #import "RecentPhotos.h"
+#import "MapViewController.h"
+#import "FlickrPhotoAnnotation.h"
 
-@interface FlickrFetcherPhotosViewController ()
+@interface FlickrFetcherPhotosViewController () <MapViewControllerDelegate>
 @property (nonatomic, strong) NSArray *photos;
+@property (strong, nonatomic) UIBarButtonItem *mapButton;
 @end
 
 @implementation FlickrFetcherPhotosViewController
@@ -24,7 +27,7 @@
 {
     if (_photos != photos){
         _photos = photos;
-        if (self.tableView.window) [self.tableView reloadData];
+        [self.tableView reloadData];
     }
 }
 
@@ -69,13 +72,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"ShowPhoto"]){
-
-        
         NSDictionary *currentPhoto = [self.photos objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-
         [segue.destinationViewController setPhoto:currentPhoto];
-        
-        [RecentPhotos addToRecents:currentPhoto];
+    } else if ([segue.identifier isEqualToString:@"ShowMap"]) {
+        [segue.destinationViewController setDelegate:self];
+        [segue.destinationViewController setAnnotations:[self mapAnnotations]];
     }
 }
 
@@ -89,12 +90,29 @@
 {
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [spinner startAnimating];
+    self.mapButton = self.navigationItem.rightBarButtonItem;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
 }
 
 - (void)endWait
 {
-    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = self.mapButton;
+}
+
+#pragma mark - MapViewControllerDelegate
+
+- (NSArray *)mapAnnotations
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.photos count]];
+    for (NSDictionary *photo in self.photos) {
+        [annotations addObject:[FlickrPhotoAnnotation annotationForPhoto:photo]];
+    }
+    return annotations;
+}
+
+- (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
+{
+    return nil;
 }
 
 #pragma mark - UITableViewDataSource

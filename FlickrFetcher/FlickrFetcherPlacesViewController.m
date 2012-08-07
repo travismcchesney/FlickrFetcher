@@ -9,9 +9,13 @@
 #import "FlickrFetcherPlacesViewController.h"
 #import "FlickrFetcher.h"
 #import "FlickrFetcherPhotosViewController.h"
+#import "MapViewController.h"
+#import "FlickrPlaceAnnotation.h"
 
-@interface FlickrFetcherPlacesViewController ()
+@interface FlickrFetcherPlacesViewController () <MapViewControllerDelegate>
 @property (nonatomic, strong) NSArray *places;
+@property (strong, nonatomic) UIBarButtonItem *mapButton;
+
 @end
 
 @implementation FlickrFetcherPlacesViewController
@@ -22,7 +26,7 @@
 {
     if (_places != places){
         _places = places;
-        if (self.tableView.window) [self.tableView reloadData];
+        [self.tableView reloadData];
     }
 }
 
@@ -59,6 +63,7 @@
 
 - (void)viewDidUnload
 {
+    [self setMapButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -66,29 +71,49 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"ShowPlacesPhotos"]){
+    if ([segue.identifier isEqualToString:@"ShowPlacesPhotos"]) {
         NSDictionary *selectedPlace = [self.places objectAtIndex:[self.tableView indexPathForSelectedRow].row];
         
         [segue.destinationViewController setPlace:selectedPlace];
+    } else if ([segue.identifier isEqualToString:@"ShowMap"]) {
+        [segue.destinationViewController setDelegate:self];
+        [segue.destinationViewController setAnnotations:[self mapAnnotations]];
     }
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait ||
-            UIInterfaceOrientationIsLandscape(interfaceOrientation));
 }
 
 - (void)startWait
 {
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [spinner startAnimating];
+    self.mapButton = self.navigationItem.rightBarButtonItem;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
 }
 
 - (void)endWait
 {
-    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = self.mapButton;
+}
+
+#pragma mark - MapViewControllerDelegate
+
+- (NSArray *)mapAnnotations
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.places count]];
+    for (NSDictionary *place in self.places) {
+        [annotations addObject:[FlickrPlaceAnnotation annotationForPlace:place]];
+    }
+    return annotations;
+}
+
+- (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
+{
+    return nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait ||
+            UIInterfaceOrientationIsLandscape(interfaceOrientation));
 }
 
 #pragma mark - UITableViewDataSource
@@ -110,19 +135,10 @@
     static NSString *CellIdentifier = @"Top Places";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
-    NSString *place = [[self.places objectAtIndex:indexPath.row] objectForKey:@"_content"];
-    NSArray *parts = [place componentsSeparatedByString:@", "];
-    NSString *placePart1;
-    NSString *placePart2;
-    NSString *placePart3;
+    FlickrPlaceAnnotation *annotation = [FlickrPlaceAnnotation annotationForPlace:[self.places objectAtIndex:indexPath.row]];
     
-    if ([parts count] > 0) placePart1 = [parts objectAtIndex:0];
-    if ([parts count] > 1) placePart2 = [parts objectAtIndex:1];
-    if ([parts count] > 2) placePart3 = [parts objectAtIndex:2];
-    
-    cell.textLabel.text = placePart1;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", placePart2, placePart3, nil];
+    cell.textLabel.text = [annotation title];
+    cell.detailTextLabel.text = [annotation subtitle];
     return cell;
 }
 
