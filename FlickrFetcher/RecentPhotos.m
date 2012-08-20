@@ -14,6 +14,8 @@
 
 + (void)addToRecents:(id)photo
 {
+    if (!photo) return;
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableArray *recentPhotos = [[defaults objectForKey:FAVORITES_KEY] mutableCopy];
     if (!recentPhotos) recentPhotos = [NSMutableArray array];

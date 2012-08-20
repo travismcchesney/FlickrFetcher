@@ -9,6 +9,10 @@
 #import "FlickrFetcherPhotoViewController.h"
 #import "FlickrFetcher.h"
 #import "FlickrFetcherCache.h"
+#import "DejalActivityView.h"
+#import "SplitViewBarButtonItemPresenter.h"
+#import "VacationHelper.h"
+#import "Photo+Flickr.h"
 
 @interface FlickrFetcherPhotoViewController () <UIScrollViewDelegate>
 
@@ -16,14 +20,29 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, strong) UIImage *photoImage;
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (nonatomic) BOOL visited;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *visitUnvisitButton;
 
 @end
 
 @implementation FlickrFetcherPhotoViewController
+@synthesize visitUnvisitButton = _visitUnvisitButton;
 @synthesize imageView = _imageView;
 @synthesize scrollView = _scrollView;
 @synthesize photoImage = _photoImage;
 @synthesize spinner = _spinner;
+@synthesize toolbar = _toolbar;
+@synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
+
+#define DEFAULT_VACATION_NAME @"My Vacation"
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.splitViewController.delegate = self;
+    [self.splitViewController setPresentsWithGesture:NO];
+}
 
 - (UIActivityIndicatorView *)spinner
 {
@@ -46,9 +65,12 @@
 {
     if (_photo != photo){
         _photo = photo;
-
-        [self updatePhotoImageWithPhoto:photo];
+        
+        [self updatePhotoImageWithPhoto:self.photo];
     }
+    
+    if (_photo)
+        [self determineVisitedforVacationName:DEFAULT_VACATION_NAME];
 }
 
 - (void)setPhotoImage:(UIImage *)photoImage
@@ -56,6 +78,87 @@
     if (_photoImage != photoImage){
         _photoImage = photoImage;
         [self updateView];
+    }
+}
+
+- (void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
+{
+    if (_splitViewBarButtonItem != splitViewBarButtonItem) {
+        NSMutableArray *toolbarItems = [self.toolbar.items mutableCopy];
+        if (_splitViewBarButtonItem) [toolbarItems removeObject:_splitViewBarButtonItem];
+        if (splitViewBarButtonItem) [toolbarItems insertObject:splitViewBarButtonItem atIndex:0];
+        self.toolbar.items = toolbarItems;
+        _splitViewBarButtonItem = splitViewBarButtonItem;
+    }
+}
+
+- (id <SplitViewBarButtonItemPresenter>)splitViewBarButtonItemPresenter
+{
+    id detailVC = [self.splitViewController.viewControllers lastObject];
+    if (![detailVC conformsToProtocol:@protocol(SplitViewBarButtonItemPresenter)]) {
+        detailVC = nil;
+    }
+    return detailVC;
+}
+
+- (BOOL)splitViewController:(UISplitViewController *)svc
+   shouldHideViewController:(UIViewController *)vc
+              inOrientation:(UIInterfaceOrientation)orientation
+{
+    return [self splitViewBarButtonItemPresenter] ? UIInterfaceOrientationIsPortrait(orientation) : NO;
+}
+
+- (void)splitViewController:(UISplitViewController *)svc
+     willHideViewController:(UIViewController *)aViewController
+          withBarButtonItem:(UIBarButtonItem *)barButtonItem
+       forPopoverController:(UIPopoverController *)pc
+{
+    barButtonItem.title = @"Photos";
+    [self splitViewBarButtonItemPresenter].splitViewBarButtonItem = barButtonItem;
+}
+
+- (void)splitViewController:(UISplitViewController *)svc
+     willShowViewController:(UIViewController *)aViewController
+  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    [self splitViewBarButtonItemPresenter].splitViewBarButtonItem = nil;
+}
+
+- (void)determineVisitedforVacationName:(NSString *)vacationName
+{
+    self.visited = false;
+    self.visitUnvisitButton.title = @"Visit";
+
+    self.visitUnvisitButton.enabled = NO;
+    
+    if (self.photo){
+        NSString *uniqueId = [self.photo objectForKey:FLICKR_PHOTO_ID];
+        
+        // Determine if the current photo has been visited and set button title accordingly
+        [[VacationHelper instance] openVacation:vacationName usingBlock:^(UIManagedDocument *vacation){
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Photo"];
+            request.predicate = [NSPredicate predicateWithFormat:@"unique = %@",uniqueId];
+            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]];
+            
+            NSError *error;
+            NSArray *photos = [vacation.managedObjectContext executeFetchRequest:request error:&error];
+            
+            if (!photos)
+                NSLog(@"Error fetching photos: %@", [error localizedDescription]);
+            
+            if ([photos count] >= 1) {
+                self.visited = YES;
+                self.visitUnvisitButton.title = @"Unvisit";
+            }
+            else {
+                self.visited = NO;
+                self.visitUnvisitButton.title = @"Visit";
+            }
+            
+            if (self.photo)
+                self.visitUnvisitButton.enabled = YES;
+                
+        }];
     }
 }
 
@@ -103,18 +206,41 @@
     [self.scrollView flashScrollIndicators];
 }
 
+- (IBAction)visitUnvisit:(UIBarButtonItem *)sender
+{
+    if (self.visited) {
+        // TODO: remove place from vacation
+        
+        sender.title = @"Visit";
+        self.visited = NO;
+    } else {
+        // Open the default "My Vacation" vacation since there is no mechanism to choose a different vacation.
+        [[VacationHelper instance] openVacation:@"My Vacation" usingBlock:^(UIManagedDocument *vacation){
+            [Photo photoWithFlickrInfo:self.photo forVacationName:DEFAULT_VACATION_NAME inManagedObjectContext:vacation.managedObjectContext];
+            sender.title = @"Unvisit";
+            self.visited = YES;
+        }];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
     self.scrollView.delegate = self;
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.splitViewController.delegate = self;
+    [self.splitViewController setPresentsWithGesture:NO];
+    
+    [self updatePhotoImageWithPhoto:self.photo];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self updateView];
+    
+    [self determineVisitedforVacationName:DEFAULT_VACATION_NAME];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -126,8 +252,9 @@
 {
     [self setImageView:nil];
     [self setScrollView:nil];
+    [self setToolbar:nil];
+    [self setVisitUnvisitButton:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -152,25 +279,12 @@
 
 - (void)startWait
 {
-    [self.spinner startAnimating];
-    if (self.splitViewController != nil){
-        self.spinner.frame = CGRectMake(0, 0, 100, 100);
-        [self.scrollView addSubview:self.spinner];
-
-    } else{
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.spinner];
-    }
+    [DejalBezelActivityView activityViewForView:self.scrollView];
 }
 
 - (void)endWait
 {
-    if (self.splitViewController != nil){
-        [self.spinner removeFromSuperview];
-
-    } else{
-        self.navigationItem.rightBarButtonItem = nil;
-    }
-
+    [DejalBezelActivityView removeViewAnimated:YES];
 }
 
 @end

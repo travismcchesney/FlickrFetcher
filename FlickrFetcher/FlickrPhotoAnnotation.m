@@ -24,12 +24,15 @@
 
 - (NSString *)title
 {
-    return [self.photo objectForKey:FLICKR_PHOTO_TITLE];
+    NSString *title = [self.photo objectForKey:FLICKR_PHOTO_TITLE];
+    NSString *description = [self subtitle];
+    return title ? title : description ? description : @"Unknown";
 }
 
 - (NSString *)subtitle
 {
-    return [self.photo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+    NSString *description = [self.photo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+    return description ? description : @"";
 }
 
 - (CLLocationCoordinate2D)coordinate

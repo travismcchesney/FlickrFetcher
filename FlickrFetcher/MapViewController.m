@@ -93,7 +93,9 @@
     if (!aView) {
         aView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapVC"];
         aView.canShowCallout = YES;
-        aView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        if ([annotation isKindOfClass:[FlickrPhotoAnnotation class]]) {
+            aView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        }
         
         UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         aView.rightCalloutAccessoryView = disclosureButton;
@@ -107,8 +109,24 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)aView
 {
-    UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
-    [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
+    if ([aView.annotation isKindOfClass:[FlickrPhotoAnnotation class]]) {
+        dispatch_queue_t downloadQueue = dispatch_queue_create("annotation photo downloader", NULL);
+        dispatch_async(downloadQueue, ^{
+            UIImage *image;
+            
+            image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (aView.window){
+                    [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
+                } else{
+                    NSLog(@"Annotation Changed");
+                }
+            });
+        });
+        dispatch_release(downloadQueue);
+    }
+    //UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
+    //[(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control

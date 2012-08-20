@@ -112,7 +112,10 @@
     static NSString *CellIdentifier = @"Recent Photos";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    cell.textLabel.text = [[self.recentPhotos objectAtIndex:indexPath.row] objectForKey:@"title"];
+    FlickrPhotoAnnotation *annotation = [FlickrPhotoAnnotation annotationForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]];
+    
+    cell.textLabel.text = [annotation title];
+    cell.detailTextLabel.text = [annotation subtitle];
     
     return cell;
 }

@@ -112,7 +112,10 @@
 
 - (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
 {
-    return nil;
+    FlickrPhotoAnnotation *fpa = (FlickrPhotoAnnotation *)annotation;
+    NSURL *url = [FlickrFetcher urlForPhoto:fpa.photo format:FlickrPhotoFormatSquare];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    return data ? [UIImage imageWithData:data] : nil;
 }
 
 #pragma mark - UITableViewDataSource
@@ -135,11 +138,10 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
-    NSString *title = [[self.photos objectAtIndex:indexPath.row] objectForKey:FLICKR_PHOTO_TITLE];
-    NSString *description = [[self.photos objectAtIndex:indexPath.row] valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
+    FlickrPhotoAnnotation *annotation = [FlickrPhotoAnnotation annotationForPhoto:[self.photos objectAtIndex:indexPath.row]];
     
-    cell.textLabel.text = title ? title : description ? description : @"Unknown";
-    cell.detailTextLabel.text = description ? description : @"";
+    cell.textLabel.text = [annotation title];
+    cell.detailTextLabel.text = [annotation subtitle];
     //NSLog(@"%@", [self.photos objectAtIndex:indexPath.row]);
     return cell;
 }

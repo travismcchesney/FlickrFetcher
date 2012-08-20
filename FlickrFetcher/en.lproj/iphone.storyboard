@@ -135,7 +135,7 @@
             </objects>
             <point key="canvasLocation" x="2356" y="46"/>
         </scene>
-        <!--Flickr Fetcher Recents View Controller - Title-->
+        <!--Flickr Fetcher Recents View Controller - Recent Photos-->
         <scene sceneID="JW7-wb-6q0">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="72P-5P-GdV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -179,7 +179,7 @@
                             <outlet property="delegate" destination="DLg-BX-B8f" id="JHH-bt-duU"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Title" id="Tpb-eX-IEo"/>
+                    <navigationItem key="navigationItem" title="Recent Photos" id="Tpb-eX-IEo"/>
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="1124" y="290"/>
@@ -241,12 +241,34 @@
             <point key="canvasLocation" x="598" y="290"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="FlickrFetcherPhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPhotoViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="FlickrFetcherPhotosViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPhotosViewController.h"/>
+        </class>
+        <class className="FlickrFetcherPlacesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPlacesViewController.h"/>
+        </class>
+        <class className="FlickrFetcherRecentsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherRecentsViewController.h"/>
+        </class>
+        <class className="FlickrFetcherViewController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="n5p-Kh-CGF"/>
+        <segue reference="gdf-6d-ToO"/>
     </inferredMetricsTieBreakers>
 </document>
