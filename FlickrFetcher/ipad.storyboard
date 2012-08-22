@@ -292,7 +292,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
-                                    <segue destination="5o1-j5-JLh" kind="push" id="iQC-iz-0uQ"/>
+                                    <segue destination="5o1-j5-JLh" kind="push" identifier="Vacation Search" id="iQC-iz-0uQ"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -316,15 +316,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VacationSearchCell" textLabel="0lG-Zn-cUe" style="IBUITableViewCellStyleDefault" id="hfT-M1-zpQ">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VacationSearchCell" textLabel="0lG-Zn-cUe" style="IBUITableViewCellStyleDefault" id="hfT-M1-zpQ">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0lG-Zn-cUe">
-                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -333,6 +333,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <segue destination="Djt-KW-XW2" kind="push" identifier="Search" id="Ex8-4q-Uua"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -344,6 +347,69 @@
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="940" y="789"/>
+        </scene>
+        <!--Search Item Table View Controller-->
+        <scene sceneID="aUL-03-aeS">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UtN-vc-DSW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="Djt-KW-XW2" customClass="SearchItemTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="5BA-d9-LyJ">
+                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SearchCell" id="hJ5-he-bNr">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <segue destination="BOe-nI-2Dm" kind="push" id="VkM-1g-Jga"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Djt-KW-XW2" id="Mb0-fW-2Mp"/>
+                            <outlet property="delegate" destination="Djt-KW-XW2" id="tYW-Wh-DQ2"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="muQ-F3-aPP"/>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="1519" y="877"/>
+        </scene>
+        <!--Vacation Photos Table View Controller-->
+        <scene sceneID="7Om-Nv-IOc">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="u0J-gJ-2ew" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="BOe-nI-2Dm" customClass="VacationPhotosTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="j7X-cR-quu">
+                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PlacePhotoCell" id="V5E-4E-YJQ">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="BOe-nI-2Dm" id="ckJ-gY-RFf"/>
+                            <outlet property="delegate" destination="BOe-nI-2Dm" id="yW5-El-CFS"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="fKz-yd-x8g"/>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="2084" y="877"/>
         </scene>
         <!--Map View Controller - Map-->
         <scene sceneID="bMj-jq-zEv">
@@ -409,13 +475,58 @@
             <point key="canvasLocation" x="-61" y="789"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="CoreDataTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
+        </class>
+        <class className="FlickrFetcherPhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPhotoViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="visitUnvisit:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+                <relationship kind="outlet" name="visitUnvisitButton" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="FlickrFetcherPhotosViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPhotosViewController.h"/>
+        </class>
+        <class className="FlickrFetcherPlacesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherPlacesViewController.h"/>
+        </class>
+        <class className="FlickrFetcherRecentsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherRecentsViewController.h"/>
+        </class>
+        <class className="FlickrFetcherViewController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FlickrFetcherViewController.h"/>
+        </class>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="SearchItemTableViewController" superclassName="CoreDataTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SearchItemTableViewController.h"/>
+        </class>
+        <class className="VacationPhotosTableViewController" superclassName="CoreDataTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VacationPhotosTableViewController.h"/>
+        </class>
+        <class className="VacationSearchViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VacationSearchViewController.h"/>
+        </class>
+        <class className="VirtualVacationTableViewController" superclassName="CoreDataTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VirtualVacationTableViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="8f7-GD-vKq"/>
+        <segue reference="cuj-74-Ku1"/>
         <segue reference="ww9-o1-mBc"/>
     </inferredMetricsTieBreakers>
 </document>

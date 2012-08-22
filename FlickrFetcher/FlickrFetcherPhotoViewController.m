@@ -209,7 +209,7 @@
 - (IBAction)visitUnvisit:(UIBarButtonItem *)sender
 {
     if (self.visited) {
-        // TODO: remove place from vacation
+        // TODO: remove photo from vacation
         
         sender.title = @"Visit";
         self.visited = NO;
@@ -219,6 +219,10 @@
             [Photo photoWithFlickrInfo:self.photo forVacationName:DEFAULT_VACATION_NAME inManagedObjectContext:vacation.managedObjectContext];
             sender.title = @"Unvisit";
             self.visited = YES;
+            [vacation saveToURL:vacation.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
+                if (!success)
+                    NSLog(@"Could not save photo to vacation");
+            }];
         }];
     }
 }

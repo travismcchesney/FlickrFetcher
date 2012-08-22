@@ -16,7 +16,8 @@
     </entity>
     <entity name="Tag" representedClassName="Tag" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="photo" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Photo" inverseName="tags" inverseEntity="Photo" syncable="YES"/>
+        <attribute name="occurs" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="photo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="tags" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <entity name="Vacation" representedClassName="Vacation" syncable="YES">
         <attribute name="dateAdded" optional="YES" attributeType="Date" syncable="YES"/>
@@ -24,9 +25,9 @@
         <relationship name="places" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Place" inverseName="vacation" inverseEntity="Place" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Vacation" positionX="-171" positionY="-126" width="128" height="88"/>
-        <element name="Place" positionX="90" positionY="-45" width="128" height="103"/>
-        <element name="Photo" positionX="79" positionY="135" width="128" height="133"/>
-        <element name="Tag" positionX="322" positionY="161" width="128" height="73"/>
+        <element name="Vacation" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Place" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Photo" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Tag" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

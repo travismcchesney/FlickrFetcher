@@ -42,9 +42,17 @@
         photo.subtitle = [flickrInfo valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
         photo.imageURL = [[FlickrFetcher urlForPhoto:flickrInfo format:FlickrPhotoFormatLarge] absoluteString];
         
-        NSMutableSet *tags;
-        for (NSString *tag in [[flickrInfo objectForKey:FLICKR_TAGS] componentsSeparatedByString:@" "]) {
-            [tags addObject:[Tag tagWithName:[tag capitalizedString] inManagedObjectContext:context]];
+        NSArray *flickrTags = [[flickrInfo objectForKey:FLICKR_TAGS] componentsSeparatedByString:@" "];
+        NSMutableSet *tags = [[NSMutableSet alloc] initWithCapacity:[flickrTags count]];
+        for (NSString *tag in flickrTags) {
+            // Exclude any tags containing a colon
+            NSRange range = [tag rangeOfString:@":"
+                                       options:NSCaseInsensitiveSearch];
+            if(range.location == NSNotFound) {
+                Tag *toAdd = [Tag tagWithName:[tag capitalizedString] inManagedObjectContext:context];
+                toAdd.occurs = [NSNumber numberWithInt:[toAdd.occurs intValue] + 1];
+                [tags addObject:toAdd];
+            }
         }
         photo.tags = tags;
         

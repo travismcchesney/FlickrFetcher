@@ -15,7 +15,7 @@
 {
     Tag *tag = nil;
     
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Place"];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Tag"];
     request.predicate = [NSPredicate predicateWithFormat:@"name = %@", name];
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];

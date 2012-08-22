@@ -7,12 +7,16 @@
 //
 
 #import "VacationSearchViewController.h"
+#import "SearchItemTableViewController.h"
+#import "SearchItemParameter.h"
 
 @interface VacationSearchViewController ()
 
 @end
 
 @implementation VacationSearchViewController
+
+@synthesize vacationName = _vacationName;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -41,6 +45,18 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"Search"]) {
+        NSString *searchOption = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]].textLabel.text;
+        
+        SearchItemParameter *param = [[SearchItemParameter alloc] init];
+        param.searchOption = [searchOption isEqualToString:@"Itinerary"] ? @"Place" : searchOption;
+        param.vacationName = self.vacationName;
+        ((SearchItemTableViewController *)segue.destinationViewController).searchParameter = param;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

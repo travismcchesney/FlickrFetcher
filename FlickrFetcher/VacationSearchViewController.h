@@ -10,4 +10,6 @@
 
 @interface VacationSearchViewController : UITableViewController
 
+@property (nonatomic, strong) NSString *vacationName;
+
 @end

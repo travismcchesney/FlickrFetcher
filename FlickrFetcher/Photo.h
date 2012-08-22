@@ -2,7 +2,7 @@
 //  Photo.h
 //  FlickrFetcher
 //
-//  Created by Travis McChesney on 8/16/12.
+//  Created by Travis McChesney on 8/21/12.
 //
 //
 

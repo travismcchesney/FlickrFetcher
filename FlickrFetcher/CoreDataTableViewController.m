@@ -25,6 +25,16 @@
     return YES;
 }
 
+- (BOOL)debug
+{
+    return YES;
+}
+
+- (void)setDebug:(BOOL)debug
+{
+    _debug = debug;
+}
+
 #pragma mark - Fetching
 
 - (void)performFetch

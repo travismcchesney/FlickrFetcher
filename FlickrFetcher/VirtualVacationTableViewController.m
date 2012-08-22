@@ -8,6 +8,7 @@
 
 #import "VirtualVacationTableViewController.h"
 #import "VacationHelper.h"
+#import "VacationSearchViewController.h"
 
 @interface VirtualVacationTableViewController ()
 
@@ -67,6 +68,14 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"Vacation Search"]) {
+        NSString *vacationName = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]].textLabel.text;
+        [(VacationSearchViewController *)segue.destinationViewController setVacationName:vacationName];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
