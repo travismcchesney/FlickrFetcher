@@ -13,11 +13,14 @@
 #import "SplitViewBarButtonItemPresenter.h"
 #import "VacationHelper.h"
 #import "Photo+Flickr.h"
+#import "Vacation.h"
 
 @interface FlickrFetcherPhotoViewController () <UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, strong) Vacation *vacation;
+@property (nonatomic, strong) Photo *vacationPhoto;
 @property (nonatomic, strong) UIImage *photoImage;
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
@@ -30,6 +33,8 @@
 @synthesize visitUnvisitButton = _visitUnvisitButton;
 @synthesize imageView = _imageView;
 @synthesize scrollView = _scrollView;
+@synthesize vacation = _vacation;
+@synthesize vacationPhoto = _vacationPhoto;
 @synthesize photoImage = _photoImage;
 @synthesize spinner = _spinner;
 @synthesize toolbar = _toolbar;
@@ -71,6 +76,16 @@
     
     if (_photo)
         [self determineVisitedforVacationName:DEFAULT_VACATION_NAME];
+}
+
+- (void)setVacationPhoto:(Photo *)vacationPhoto
+{
+    if (_vacationPhoto != vacationPhoto){
+        _vacationPhoto = vacationPhoto;
+        
+        if (_vacationPhoto && !(self.photo))
+            [self updatePhotoImageWithVacationPhoto:_vacationPhoto];
+    }
 }
 
 - (void)setPhotoImage:(UIImage *)photoImage
@@ -126,7 +141,7 @@
 
 - (void)determineVisitedforVacationName:(NSString *)vacationName
 {
-    self.visited = false;
+    self.visited = NO;
     self.visitUnvisitButton.title = @"Visit";
 
     self.visitUnvisitButton.enabled = NO;
@@ -155,8 +170,10 @@
                 self.visitUnvisitButton.title = @"Visit";
             }
             
-            if (self.photo)
+            if (self.photo) {
                 self.visitUnvisitButton.enabled = YES;
+                self.vacationPhoto = [photos lastObject];
+            }
                 
         }];
     }
@@ -183,8 +200,32 @@
     dispatch_release(downloadQueue);
 }
 
+- (void)updatePhotoImageWithVacationPhoto:(Photo *)photo
+{
+    [self startWait];
+    
+    dispatch_queue_t downloadQueue = dispatch_queue_create("photo downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        UIImage *image;
+
+        NSData *urlData;
+        
+        urlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:photo.imageURL]];
+        image = [UIImage imageWithData:urlData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.vacationPhoto == photo && self.imageView.window){
+                self.photoImage = image;
+            } else{
+                NSLog(@"PhotoChanged");
+            }
+            [self endWait];
+        });
+    });
+    dispatch_release(downloadQueue);
+}
+
 - (void)updateView
-{    
+{
     self.scrollView.zoomScale = 1.0;
     
     CGSize size = CGSizeMake(self.photoImage.size.width, self.photoImage.size.height);
@@ -209,14 +250,27 @@
 - (IBAction)visitUnvisit:(UIBarButtonItem *)sender
 {
     if (self.visited) {
-        // TODO: remove photo from vacation
+        if (self.vacationPhoto) {
+            [[VacationHelper instance] openVacation:@"My Vacation" usingBlock:^(UIManagedDocument *vacation){
+                [vacation.managedObjectContext deleteObject:self.vacationPhoto];
+                sender.title = @"Unvisit";
+                self.visited = YES;
+                [vacation saveToURL:vacation.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
+                    if (!success)
+                        NSLog(@"Could not save photo to vacation");
+                }];
+                self.vacationPhoto = nil;
+            }];
+        }
         
         sender.title = @"Visit";
         self.visited = NO;
     } else {
         // Open the default "My Vacation" vacation since there is no mechanism to choose a different vacation.
         [[VacationHelper instance] openVacation:@"My Vacation" usingBlock:^(UIManagedDocument *vacation){
-            [Photo photoWithFlickrInfo:self.photo forVacationName:DEFAULT_VACATION_NAME inManagedObjectContext:vacation.managedObjectContext];
+            self.vacationPhoto = [Photo photoWithFlickrInfo:self.photo
+                                            forVacationName:DEFAULT_VACATION_NAME
+                                     inManagedObjectContext:vacation.managedObjectContext];
             sender.title = @"Unvisit";
             self.visited = YES;
             [vacation saveToURL:vacation.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){

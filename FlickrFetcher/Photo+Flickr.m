@@ -11,6 +11,7 @@
 #import "Tag+Create.h"
 #import "Place+Create.h"
 #import "Vacation+Create.h"
+#import "Tag.h"
 
 @implementation Photo (Flickr)
 
@@ -63,6 +64,21 @@
     }
     
     return photo;
+}
+
+- (void)prepareForDeletion
+{
+    // If we're the last photo for this tag, delete the tag
+    for (Tag *tag in self.tags) {
+        tag.occurs = [NSNumber numberWithInt:[tag.occurs intValue] - 1];
+        if ([tag.occurs intValue] <= 0) {
+            [self.managedObjectContext deleteObject:tag];
+        }
+    }
+    
+    // If we're the last photo in this place, delete the place
+    if (self.place && [self.place.photos count] <= 1)
+        [self.managedObjectContext deleteObject:self.place];
 }
 
 @end

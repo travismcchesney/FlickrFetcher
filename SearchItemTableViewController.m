@@ -43,9 +43,13 @@
                                                             [NSSortDescriptor sortDescriptorWithKey:@"name"
                                                                                           ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)], nil];
     } else if ([self.searchParameter.searchOption isEqualToString:@"Place"]) {
-        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateAdded" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateAdded"
+                                                                                         ascending:YES
+                                                                                          selector:@selector(localizedCaseInsensitiveCompare:)]];
     } else {
-        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name"
+                                                                                         ascending:YES
+                                                                                          selector:@selector(localizedCaseInsensitiveCompare:)]];
     }
     // no predicate because we want ALL the search items
     
