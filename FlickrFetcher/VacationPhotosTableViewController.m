@@ -7,6 +7,7 @@
 //
 
 #import "VacationPhotosTableViewController.h"
+#import "FlickrFetcherPhotoViewController.h"
 #import "Photo.h"
 
 @interface VacationPhotosTableViewController ()
@@ -78,6 +79,15 @@
     cell.detailTextLabel.text = photo.subtitle;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    id detail = [self.splitViewController.viewControllers lastObject];
+    if ([detail isKindOfClass:[FlickrFetcherPhotoViewController class]]) {
+        FlickrFetcherPhotoViewController *photoVC = (FlickrFetcherPhotoViewController *)detail;
+        photoVC.vacationPhoto = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    }
 }
 
 @end

@@ -14,13 +14,12 @@
 #import "VacationHelper.h"
 #import "Photo+Flickr.h"
 #import "Vacation.h"
+#import "Place.h"
 
 @interface FlickrFetcherPhotoViewController () <UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, strong) Vacation *vacation;
-@property (nonatomic, strong) Photo *vacationPhoto;
 @property (nonatomic, strong) UIImage *photoImage;
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
@@ -33,7 +32,6 @@
 @synthesize visitUnvisitButton = _visitUnvisitButton;
 @synthesize imageView = _imageView;
 @synthesize scrollView = _scrollView;
-@synthesize vacation = _vacation;
 @synthesize vacationPhoto = _vacationPhoto;
 @synthesize photoImage = _photoImage;
 @synthesize spinner = _spinner;
@@ -71,11 +69,12 @@
     if (_photo != photo){
         _photo = photo;
         
-        [self updatePhotoImageWithPhoto:self.photo];
+        if (_photo) {
+            self.vacationPhoto = nil;
+            [self determineVisitedforVacationName:DEFAULT_VACATION_NAME];
+            [self updatePhotoImageWithPhoto:self.photo];
+        }
     }
-    
-    if (_photo)
-        [self determineVisitedforVacationName:DEFAULT_VACATION_NAME];
 }
 
 - (void)setVacationPhoto:(Photo *)vacationPhoto
@@ -83,8 +82,13 @@
     if (_vacationPhoto != vacationPhoto){
         _vacationPhoto = vacationPhoto;
         
-        if (_vacationPhoto && !(self.photo))
-            [self updatePhotoImageWithVacationPhoto:_vacationPhoto];
+        if (_vacationPhoto) {
+            [self determineVisitedforVacationName:_vacationPhoto.place.vacation.name];
+            if (!self.photo)
+                [self updatePhotoImageWithVacationPhoto:_vacationPhoto];
+            
+            self.photo = nil;
+        }
     }
 }
 
@@ -172,10 +176,14 @@
             
             if (self.photo) {
                 self.visitUnvisitButton.enabled = YES;
-                self.vacationPhoto = [photos lastObject];
+                //self.vacationPhoto = [photos lastObject];
             }
                 
         }];
+    } else if (self.vacationPhoto) {
+        self.visited = YES;
+        self.visitUnvisitButton.title = @"Unvisit";
+        self.visitUnvisitButton.enabled = YES;
     }
 }
 
@@ -251,7 +259,7 @@
 {
     if (self.visited) {
         if (self.vacationPhoto) {
-            [[VacationHelper instance] openVacation:@"My Vacation" usingBlock:^(UIManagedDocument *vacation){
+            [[VacationHelper instance] openVacation:DEFAULT_VACATION_NAME usingBlock:^(UIManagedDocument *vacation){
                 [vacation.managedObjectContext deleteObject:self.vacationPhoto];
                 sender.title = @"Unvisit";
                 self.visited = YES;
@@ -260,14 +268,16 @@
                         NSLog(@"Could not save photo to vacation");
                 }];
                 self.vacationPhoto = nil;
+                self.photoImage = nil;
             }];
         }
         
         sender.title = @"Visit";
+        sender.enabled = NO;
         self.visited = NO;
     } else {
         // Open the default "My Vacation" vacation since there is no mechanism to choose a different vacation.
-        [[VacationHelper instance] openVacation:@"My Vacation" usingBlock:^(UIManagedDocument *vacation){
+        [[VacationHelper instance] openVacation:DEFAULT_VACATION_NAME usingBlock:^(UIManagedDocument *vacation){
             self.vacationPhoto = [Photo photoWithFlickrInfo:self.photo
                                             forVacationName:DEFAULT_VACATION_NAME
                                      inManagedObjectContext:vacation.managedObjectContext];
