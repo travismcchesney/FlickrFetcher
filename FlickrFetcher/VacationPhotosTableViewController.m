@@ -87,6 +87,7 @@
     if ([detail isKindOfClass:[FlickrFetcherPhotoViewController class]]) {
         FlickrFetcherPhotoViewController *photoVC = (FlickrFetcherPhotoViewController *)detail;
         photoVC.vacationPhoto = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        photoVC.onVacation = YES;
     }
 }
 

@@ -44,8 +44,7 @@
                                                                                           ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)], nil];
     } else if ([self.searchParameter.searchOption isEqualToString:@"Place"]) {
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateAdded"
-                                                                                         ascending:YES
-                                                                                          selector:@selector(localizedCaseInsensitiveCompare:)]];
+                                                                                         ascending:YES]];
     } else {
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name"
                                                                                          ascending:YES

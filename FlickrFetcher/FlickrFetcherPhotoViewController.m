@@ -37,6 +37,7 @@
 @synthesize spinner = _spinner;
 @synthesize toolbar = _toolbar;
 @synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
+@synthesize onVacation = _onVacation;
 
 #define DEFAULT_VACATION_NAME @"My Vacation"
 
@@ -73,6 +74,7 @@
             self.vacationPhoto = nil;
             [self determineVisitedforVacationName:DEFAULT_VACATION_NAME];
             [self updatePhotoImageWithPhoto:self.photo];
+            self.onVacation = NO;
         }
     }
 }
@@ -267,14 +269,18 @@
                     if (!success)
                         NSLog(@"Could not save photo to vacation");
                 }];
-                self.vacationPhoto = nil;
-                self.photoImage = nil;
+                if (self.onVacation) {
+                    self.vacationPhoto = nil;
+                    self.photoImage = nil;
+                }
             }];
         }
         
         sender.title = @"Visit";
-        sender.enabled = NO;
         self.visited = NO;
+        
+        if (self.onVacation)
+            sender.enabled = NO;
     } else {
         // Open the default "My Vacation" vacation since there is no mechanism to choose a different vacation.
         [[VacationHelper instance] openVacation:DEFAULT_VACATION_NAME usingBlock:^(UIManagedDocument *vacation){

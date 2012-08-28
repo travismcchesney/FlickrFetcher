@@ -13,4 +13,5 @@
 @interface FlickrFetcherPhotoViewController : UIViewController <UISplitViewControllerDelegate, SplitViewBarButtonItemPresenter>
 @property (nonatomic, strong) NSDictionary *photo;
 @property (nonatomic, strong) Photo *vacationPhoto;
+@property (nonatomic) BOOL onVacation;
 @end
